@@ -1,6 +1,6 @@
 const router = require("express").Router();
-const novelController = require(".\\..\\controllers\\novelController");
-const authController = require(".\\..\\controllers\\authController");
+const novelController = require("./../controllers/novelController");
+const authController = require("./../controllers/authController");
 
 router.post(
   "/upload",

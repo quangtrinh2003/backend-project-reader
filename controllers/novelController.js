@@ -1,11 +1,11 @@
 const fsp = require("fs/promises");
 const slugify = require("slugify");
-const Novel = require(".\\..\\models\\novelSchema");
-const NovelStat = require(".\\..\\models\\novelStatSchema");
-const NovelChaptersInfo = require(".\\..\\models\\novelChapterSchema");
-const User = require(".\\..\\models\\userSchema");
-const catchAsync = require(".\\..\\utils\\catchAsync");
-const parseStringToHTML = require(".\\..\\utils\\parseStringToHTML");
+const Novel = require("./../models/novelSchema");
+const NovelStat = require("./../models/novelStatSchema");
+const NovelChaptersInfo = require("./../models/novelChapterSchema");
+const User = require("./../models/userSchema");
+const catchAsync = require("./../utils/catchAsync");
+const parseStringToHTML = require("./../utils/parseStringToHTML");
 
 
 
@@ -16,7 +16,7 @@ exports.novelRetrieveRouting = async (req, res, next) => {
 };
 
 exports.createNovelChapter = catchAsync(async function (req, res, next) {
-  const path = `${process.env.NOVEL_DIRECTORY_PATH}\\${req.params.id}`;
+  const path = `${process.env.NOVEL_DIRECTORY_PATH}/${req.params.id}`;
   await fsp.access(path);
 
   let [chapterName, text] = parseStringToHTML(req.body.data);
@@ -70,7 +70,7 @@ exports.getEditChapter = catchAsync(async (req, res, next) => {
     res.status(404).json({ status: "failed", message: "not found" });
   }
 
-  const path = `${process.env.NOVEL_DIRECTORY_PATH}\\${req.params.id}\\${req.params.chapter}.txt`;
+  const path = `${process.env.NOVEL_DIRECTORY_PATH}/${req.params.id}/${req.params.chapter}.txt`;
 
   const text = await fsp.readFile(path, { encoding: "utf-8" });
   res.status(200).send(text);
@@ -80,7 +80,7 @@ exports.updateEditChapter = catchAsync(async (req, res, next) => {
   if (!req.params.id || !req.params.chapter) {
     res.status(404).json({ status: "failed", message: "not found" });
   }
-  const path = `${process.env.NOVEL_DIRECTORY_PATH}\\${req.params.id}\\${req.params.chapter}.txt`;
+  const path = `${process.env.NOVEL_DIRECTORY_PATH}/${req.params.id}/${req.params.chapter}.txt`;
   await fsp.access(path);
   let [chapterName, text] = parseStringToHTML(req.body.data);
 
@@ -125,7 +125,7 @@ async function getNovel(req, res, next) {
 }
 
 async function getChapter(req, res, next) {
-  const path = `${process.env.NOVEL_DIRECTORY_PATH}\\${req.params.id}\\${req.params.chapter}.txt`;
+  const path = `${process.env.NOVEL_DIRECTORY_PATH}/${req.params.id}/${req.params.chapter}.txt`;
   const text = await fsp.readFile(path, { encoding: "utf-8" });
 
   res.status(200).send(text);
@@ -133,7 +133,7 @@ async function getChapter(req, res, next) {
 
 async function checkNovelExist(novelUrl) {
   try {
-    await fsp.access(`${process.env.NOVEL_DIRECTORY_PATH}\\${novelUrl}`);
+    await fsp.access(`${process.env.NOVEL_DIRECTORY_PATH}/${novelUrl}`);
     return true;
   } catch (err) {
     return false;
@@ -146,14 +146,14 @@ async function createNovelFolder(novelName) {
     novelId++;
   }
   await fsp.mkdir(
-    `${process.env.NOVEL_DIRECTORY_PATH}\\${novelId}-${novelName}`,
+    `${process.env.NOVEL_DIRECTORY_PATH}/${novelId}-${novelName}`,
   );
   return `${novelId}-${novelName}`;
 }
 
 async function createAndWriteXMLFile(folderName, fileName, text) {
   await fsp.writeFile(
-    `${process.env.NOVEL_DIRECTORY_PATH}\\${folderName}\\${fileName}.txt`,
+    `${process.env.NOVEL_DIRECTORY_PATH}/${folderName}/${fileName}.txt`,
     text,
   );
 }

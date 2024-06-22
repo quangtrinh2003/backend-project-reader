@@ -1,5 +1,5 @@
-const AppError = require("..\\utils\\AppError");
-const errorMessageUtils = require("..\\utils\\errorMessageUtils");
+const AppError = require("../utils/AppError");
+const errorMessageUtils = require("../utils/errorMessageUtils");
 
 function errorHandler(err, req, res, next) {
   let error = structuredClone(err);

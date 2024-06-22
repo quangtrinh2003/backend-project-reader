@@ -1,8 +1,8 @@
 const { promisify } = require("util");
 const jwt = require("jsonwebtoken");
-const User = require("..\\models\\userSchema");
-const catchAsync = require(".\\..\\utils\\catchAsync");
-const AppError = require(".\\..\\utils\\AppError");
+const User = require("../models/userSchema");
+const catchAsync = require("./../utils/catchAsync");
+const AppError = require("./../utils/AppError");
 const { decode } = require("jsonwebtoken");
 
 exports.register = catchAsync(async function (req, res, next) {

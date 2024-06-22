@@ -1,8 +1,8 @@
 const express = require("express");
 const morgan = require("morgan");
-const userRoutes = require(".\\routes\\userRoutes");
-const novelRoutes = require(".\\routes\\novelRoutes");
-const errorHandler = require(".\\controllers\\errorHandlerController");
+const userRoutes = require("./routes/userRoutes");
+const novelRoutes = require("./routes/novelRoutes");
+const errorHandler = require("./controllers/errorHandlerController");
 const cors = require("cors");
 const app = express();
 

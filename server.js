@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const cors = require('cors');
 const app = require("./app");
 
-dotenv.config({ path: ".\\config.env" });
+dotenv.config({ path: "./config.env" });
 const DB_URL = process.env.DB.replace("<password>", process.env.DB_PASSWORD);
 
 (async () => {
