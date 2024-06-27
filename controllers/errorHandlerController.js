@@ -3,7 +3,7 @@ const errorMessageUtils = require("../utils/errorMessageUtils");
 
 function errorHandler(err, req, res, next) {
   let error = structuredClone(err);
-  error["statusCode"] = err.statusCode || undefined;
+  error["statusCode"] = err.statusCode || 500;
   let errorMessage = undefined;
 
   switch (err.name) {
@@ -40,7 +40,7 @@ function errorHandler(err, req, res, next) {
       break;
   }
 
-  res
+	res
     .status(error.statusCode)
     .json({ message: error.message, data: errorMessage });
 }

@@ -3,7 +3,7 @@ function parseStringToHTML(text) {
   const data = text.split("\n").filter(Boolean);
   data[0] = data[0] + '\n';
   let final = "";
-  data.forEach((ele) => {
+  data.splice(1).forEach((ele) => {
     final += `${ele}`;
   });
   final = `${final}`;

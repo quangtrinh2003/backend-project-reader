@@ -7,8 +7,6 @@ const User = require("./../models/userSchema");
 const catchAsync = require("./../utils/catchAsync");
 const parseStringToHTML = require("./../utils/parseStringToHTML");
 
-
-
 exports.novelRetrieveRouting = async (req, res, next) => {
   req.params.chapter
     ? await getChapter(req, res, next)
@@ -22,12 +20,18 @@ exports.createNovelChapter = catchAsync(async function (req, res, next) {
   let [chapterName, text] = parseStringToHTML(req.body.data);
 
   const fileName = await slugifyChapterName(chapterName);
-
-  await createAndWriteXMLFile(req.params.id, fileName, text);
+	
+  await createAndWriteXMLFile(
+    req.params.id,
+    fileName,
+   req.body.data,
+  );
+	console.log("write success")
   await Novel.findOneAndUpdate(
     { novelUrl: req.params.id },
     { updateDate: Date.now() },
   );
+
   await addChapterInfoToDb(chapterName, fileName, req.params.id);
   res.status(200).json({ status: "success" });
 });
@@ -82,9 +86,14 @@ exports.updateEditChapter = catchAsync(async (req, res, next) => {
   }
   const path = `${process.env.NOVEL_DIRECTORY_PATH}/${req.params.id}/${req.params.chapter}.txt`;
   await fsp.access(path);
+
   let [chapterName, text] = parseStringToHTML(req.body.data);
 
-  await createAndWriteXMLFile(req.params.id, req.params.chapter, text);
+  await createAndWriteXMLFile(
+    req.params.id,
+    req.params.chapter,
+    `${chapterName}\n${text}`,
+  );
 
   await NovelChaptersInfo.findOneAndUpdate(
     { fileName: req.params.chapter },

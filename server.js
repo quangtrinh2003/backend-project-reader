@@ -10,6 +10,6 @@ const DB_URL = process.env.DB.replace("<password>", process.env.DB_PASSWORD);
   await mongoose.connect(DB_URL);
 })();
 
-app.listen(Number(process.env.PROCESS_PORT), "localhost", () => {
+app.listen(Number(process.env.PROCESS_PORT), "10.104.0.2", () => {
   console.log("App running");
 });
