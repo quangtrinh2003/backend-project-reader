@@ -1,6 +1,6 @@
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
-const cors = require('cors');
+const cors = require("cors");
 const app = require("./app");
 
 dotenv.config({ path: "./config.env" });
@@ -10,6 +10,6 @@ const DB_URL = process.env.DB.replace("<password>", process.env.DB_PASSWORD);
   await mongoose.connect(DB_URL);
 })();
 
-app.listen(Number(process.env.PROCESS_PORT), "10.104.0.2", () => {
+app.listen(Number(process.env.PROCESS_PORT), "localhost", () => {
   console.log("App running");
 });

@@ -31,7 +31,13 @@ router
 router
   .route("/:id/:chapter?")
   .get(novelController.novelRetrieveRouting)
-  .post(authController.authentication, authController.checkNovelInvolved);
+  .post(authController.authentication, authController.checkNovelInvolved)
+  .delete(
+    authController.authentication,
+    authController.authorization,
+    novelController.novelDeleteRouting,
+  );
+
 router.route("/").get(novelController.getNovels);
 
 module.exports = router;

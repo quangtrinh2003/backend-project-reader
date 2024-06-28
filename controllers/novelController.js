@@ -13,6 +13,34 @@ exports.novelRetrieveRouting = async (req, res, next) => {
     : await getNovel(req, res, next);
 };
 
+exports.novelDeleteRouting = async (req, res, next) => {
+  req.params.chapter
+    ? await deleteChapter(req, res, next)
+    : await deleteNovel(req, res, next);
+};
+
+const deleteChapter = catchAsync(async function (req, res, next) {
+  const path = `${process.env.NOVEL_DIRECTORY_PATH}/${req.params.id}/${req.params.chapter}.txt`;
+  await fsp.access(path);
+
+  await NovelChaptersInfo.findOneAndDelete({ fileName: req.params.chapter });
+  await fsp.rm(path);
+
+  res.status(200).json({ status: "success" });
+});
+
+const deleteNovel = catchAsync(async function (req, res, next) {
+  console.log("hello");
+  const path = `${process.env.NOVEL_DIRECTORY_PATH}/${req.params.id}`;
+  await fsp.access(path);
+
+  await Novel.findOneAndDelete({ novelUrl: req.params.id });
+  await NovelChaptersInfo.deleteMany({ novelUrl: req.params.id });
+  await fsp.rm(path, { recursive: true });
+
+  res.status(200).json({ status: "success" });
+});
+
 exports.createNovelChapter = catchAsync(async function (req, res, next) {
   const path = `${process.env.NOVEL_DIRECTORY_PATH}/${req.params.id}`;
   await fsp.access(path);
@@ -20,13 +48,9 @@ exports.createNovelChapter = catchAsync(async function (req, res, next) {
   let [chapterName, text] = parseStringToHTML(req.body.data);
 
   const fileName = await slugifyChapterName(chapterName);
-	
-  await createAndWriteXMLFile(
-    req.params.id,
-    fileName,
-   req.body.data,
-  );
-	console.log("write success")
+
+  await createAndWriteXMLFile(req.params.id, fileName, req.body.data);
+  console.log("write success");
   await Novel.findOneAndUpdate(
     { novelUrl: req.params.id },
     { updateDate: Date.now() },
@@ -124,7 +148,6 @@ async function getNovel(req, res, next) {
         uploadDate: -1,
       },
     },
-    { $limit: 4 },
     {
       $project: { _id: 0, __v: 0, uploadDate: 0 },
     },

@@ -82,7 +82,7 @@ function sendCookieBack(newUser, res) {
   const cookieOptions = {
     httpOnly: true,
     maxAge: Date.now() + process.env.JWT_EXPIRES * 24 * 60 * 60 * 1000,
-		secure: true
+    //secure: true
   };
   res
     .cookie("jwt", token, cookieOptions)
